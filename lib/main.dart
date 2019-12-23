@@ -19,8 +19,8 @@ Future<Stream<Khudba>> getKhudba() async {
       .map((data) => data)
       .expand((data) => (data as List))
       .map((data) {
-    return Khudba.fromJSON(data);
-  });
+        return Khudba.fromJSON(data);
+      });
 }
 
 void main() => runApp(MyApp());
@@ -63,16 +63,9 @@ class _MyHomePageState extends State<MyHomePage> {
       setState(() {
         khudbas.add(_khudba);
       });
-      return ListView.builder(
-          scrollDirection: Axis.vertical,
-          itemBuilder: (BuildContext context, int index) {
-            _makeElementIndex(khudbas[index].id);
-          });
     }, onError: (a) {
       print(a);
-    }, onDone: () {
-      
-    });
+    }, onDone: () {});
   }
 
   @override
@@ -82,7 +75,15 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title),
       ),
       body: Center(
-        child: listenForKhudba(),
+        child: ListView.builder(
+          itemCount: khudbas.length,
+          itemBuilder: (BuildContext context, int index) {
+            return ListTile(
+              subtitle: Text(khudbas[index].id.toString()),
+              title: Text(khudbas[index].title),
+            );
+          },
+        ),
       ),
     );
   }
@@ -91,7 +92,6 @@ class _MyHomePageState extends State<MyHomePage> {
     if (index >= khudbas.length) {
       return null;
     }
-
     return Container(
       padding: EdgeInsets.all(5.0),
       child: FittedBox(
