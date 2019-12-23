@@ -1,7 +1,7 @@
 
 class Khudba {
-  int id;
-  int uuid;
+  String id;
+  String uuid;
   int readingTime;
   String createdAt;
   String publishedAt;
@@ -9,7 +9,7 @@ class Khudba {
 
   Khudba();
 
-  Khudba.fromJSON(Map<String, dynamic> jsonMap) {
+  Khudba.fromJSON(Map<String,dynamic> jsonMap) {
     id = jsonMap['id'];
     uuid = jsonMap['uuid'];
     createdAt = jsonMap['created_at'];

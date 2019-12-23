@@ -3,22 +3,25 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'post.dart';
+import 'package:khudba/helper.dart';
+import 'package:khudba/khudba_model.dart';
 
-Future<Stream<Post>> getKhudba() async {
+
+Future<Stream<Khudba>> getKhudba() async {
   final String url =
       "https://www.huduba.tk/ghost/api/v3/content/posts/?key=249d66aa2f514031c7e0bf11eb";
   final myClient = new http.Client();
   final streamRest = await myClient.send(http.Request('get', Uri.parse(url)));
 
-  print(streamRest);
+  
   return streamRest.stream
       .transform(utf8.decoder)
       .transform(json.decoder)
-      .map((data) => data)
+      .map((data) => Helper.getData(data))
       .expand((data) => (data as List))
       .map((data) {
-        return Post.fromJSON(data);
+        
+        return Khudba.fromJSON(data);
       });
 }
 
@@ -47,7 +50,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  List<Post> khudbas = <Post>[];
+  List<Khudba> khudbas = <Khudba>[];
 
   @override
   void initState() {
@@ -56,14 +59,18 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   listenForKhudba() async {
-    final Stream<Post> stream = await getKhudba();
-    stream.listen((Post _khudba) {
+    final Stream<Khudba> stream = await getKhudba();
+    stream.listen((Khudba _khudba) {
       setState(() {
         khudbas.add(_khudba);
+
       });
     }, onError: (a) {
       print(a);
-    }, onDone: () {});
+    }, onDone: () {
+
+     
+    });
   }
 
   @override
@@ -77,7 +84,7 @@ class _MyHomePageState extends State<MyHomePage> {
           itemCount: khudbas.length,
           itemBuilder: (BuildContext context, int index) {
             return ListTile(
-              subtitle: Text(khudbas[index].toString()),
+              subtitle: Text(khudbas[index].title),
               // title: Text(),
             );
           },
