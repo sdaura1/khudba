@@ -1,11 +1,10 @@
-import 'dart:convert';
 
 class Khudba {
   int id;
   int uuid;
-  int reading_time;
-  String created_at;
-  String published_at;
+  int readingTime;
+  String createdAt;
+  String publishedAt;
   String title;
 
   Khudba();
@@ -13,9 +12,9 @@ class Khudba {
   Khudba.fromJSON(Map<String, dynamic> jsonMap) {
     id = jsonMap['id'];
     uuid = jsonMap['uuid'];
-    created_at = jsonMap['created_at'];
-    published_at = jsonMap['published_at'];
+    createdAt = jsonMap['created_at'];
+    publishedAt = jsonMap['published_at'];
     title = jsonMap['title'];
-    reading_time = jsonMap['reading_time'];
+    readingTime = jsonMap['reading_time'];
   }
 }

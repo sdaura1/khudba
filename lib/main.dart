@@ -1,16 +1,15 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'khudba_model.dart';
+import 'post.dart';
 
-Future<Stream<Khudba>> getKhudba() async {
+Future<Stream<Post>> getKhudba() async {
   final String url =
       "https://www.huduba.tk/ghost/api/v3/content/posts/?key=249d66aa2f514031c7e0bf11eb";
-  final my_client = new http.Client();
-  final streamRest = await my_client.send(http.Request('get', Uri.parse(url)));
+  final myClient = new http.Client();
+  final streamRest = await myClient.send(http.Request('get', Uri.parse(url)));
 
   print(streamRest);
   return streamRest.stream
@@ -19,7 +18,7 @@ Future<Stream<Khudba>> getKhudba() async {
       .map((data) => data)
       .expand((data) => (data as List))
       .map((data) {
-        return Khudba.fromJSON(data);
+        return Post.fromJSON(data);
       });
 }
 
@@ -48,8 +47,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  StreamController<Khudba> streamController;
-  List<Khudba> khudbas = <Khudba>[];
+  List<Post> khudbas = <Post>[];
 
   @override
   void initState() {
@@ -58,8 +56,8 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   listenForKhudba() async {
-    final Stream<Khudba> stream = await getKhudba();
-    stream.listen((Khudba _khudba) {
+    final Stream<Post> stream = await getKhudba();
+    stream.listen((Post _khudba) {
       setState(() {
         khudbas.add(_khudba);
       });
@@ -79,8 +77,8 @@ class _MyHomePageState extends State<MyHomePage> {
           itemCount: khudbas.length,
           itemBuilder: (BuildContext context, int index) {
             return ListTile(
-              subtitle: Text(khudbas[index].id.toString()),
-              title: Text(khudbas[index].title),
+              subtitle: Text(khudbas[index].toString()),
+              // title: Text(),
             );
           },
         ),
@@ -88,23 +86,23 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  Widget _makeElementIndex(int index) {
-    if (index >= khudbas.length) {
-      return null;
-    }
-    return Container(
-      padding: EdgeInsets.all(5.0),
-      child: FittedBox(
-        fit: BoxFit.fill,
-        child: Column(
-          children: <Widget>[
-            ListTile(
-              title: Text(khudbas[index].title),
-              subtitle: Text(khudbas[index].id.toString()),
-            )
-          ],
-        ),
-      ),
-    );
-  }
+  // Widget _makeElementIndex(int index) {
+  //   if (index >= khudbas.length) {
+  //     return null;
+  //   }
+  //   return Container(
+  //     padding: EdgeInsets.all(5.0),
+  //     child: FittedBox(
+  //       fit: BoxFit.fill,
+  //       child: Column(
+  //         children: <Widget>[
+  //           ListTile(
+  //             // title: Text(khudbas[index].title),
+  //             subtitle: Text(khudbas[index].toString()),
+  //           )
+  //         ],
+  //       ),
+  //     ),
+  //   );
+  // }
 }
